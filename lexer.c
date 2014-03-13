@@ -68,18 +68,25 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 			curr++;
 			line_num++;
 		}
+		printf("\nIncurr is %c, %d\n",A[curr],curr);
+		
 	}
 	if(strcmp("abcd",searchTok(A[curr]))!=0)//search for single character tokens
 	{
+		printf("\nIncurr is %c, %d\n",A[curr],curr);
 		
 		//ti.line_numb=line_num;
 		//memset(ti.pattern,0,sizeof(ti.pattern));
 		//printf("%c in a  buffer\n",A[curr]);
 		//printf("in ti %c",ti.pattern[0]);
 		ti.pattern[0]=A[curr];
+		ti.pattern[1]='\0';
 	//	printf("into the function\n\n");
-		ti.token=searchTok(A[curr]);
+		strcpy(ti.token,searchTok(A[curr]));
+		
 		curr++;
+		ti.line_numb=line_num;
+		return ti;
 	//	printf("I am in searching tok\n%d\n",ti.line_numb);
 	}
 	
@@ -93,8 +100,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 			//ti.line_numb=line_num;
 			strcpy(ti.pattern,">=");
 			ti.line_numb=line_num;
-			return ti;
 			curr++;
+			return ti;
 		}
 		else
 		{
@@ -223,7 +230,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 					strcpy(ti.token,"OR");
 					printf("Here3\n");
 					printf("Real 2nd is %s",ti.token);
-					//strcpy(ti.pattern,".or.");
+					strcpy(ti.pattern,".or.");
 					curr++;
 					ti.line_numb=line_num;
 					return ti;
@@ -305,15 +312,22 @@ int main()
 //	printf("here");
 	memset(B,0,k);
 	getStream(fp,&B,k);
-	//printf("I am here\n");
-	printf("Here");
-	tokenInfo ti=getNextToken(fp,&B,k);
-	printf("FIRST is %s\n%s\n",ti.pattern,ti.token);
-	tokenInfo ti2;
-	ti2=getNextToken(fp,&B,k);
+	while(B[curr]!='$')
+	{
+		//printf("I am here\n");
+		printf("Here");
+		tokenInfo ti;
+		memset(ti.token,0,100);
+		memset(ti.pattern,0,100);
+		ti=getNextToken(fp,&B,k);
+		printf("\nFIRST is %s\n%s\n%d\n",ti.pattern,ti.token,ti.line_numb);
+		printf("curr is %c\n",B[curr]);
+	}
+	//tokenInfo ti2;
+	//ti2=getNextToken(fp,&B,k);
 	//printf("%s is buffer",B);
 	//printf("%d is buffer",strlen(B));
-	printf(" Second Token is = %s\n",ti2.token);
+	//printf(" Second Token is = %s\n",ti2.token);
 	//printf("%s is buffer",B);
 	//int i = 0;
 	
