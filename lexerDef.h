@@ -1,8 +1,9 @@
 typedef int buffersize;
-typedef char buffer[1000];
+typedef char* buffer;
 struct tokenInfo
-	{
-		char pattern;
-		char token;
-		struct tokenInfo* next;
-	};
+{
+	char pattern[100];
+	char* token;
+	int line_numb;
+};
+typedef struct tokenInfo tokenInfo;
