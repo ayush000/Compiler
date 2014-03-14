@@ -1,6 +1,4 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
+
 #include "lexerDef.h"
 int line_num=1;
 int curr=0;
