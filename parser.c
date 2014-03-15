@@ -1,4 +1,68 @@
 #include "parserDef.h"
+//~ int currentStack=0;
+//~ int push(char* ch)
+//~ {
+	//~ if(currentStack<1000)
+	//~ {
+		//~ stack[currentStack]=(char*)malloc(sizeof(ch));
+		//~ strcpy(stack[currentStack],ch);
+		//~ printf("%s",stack[currentStack]);
+		//~ currentStack++;
+		//~ return 1;
+	//~ }
+	//~ return 0;
+//~ }
+//~ 
+//~ int pop()
+//~ {
+	//~ if(currentStack!=0)
+	//~ {
+		//~ currentStack--;
+	//~ }
+	//~ return 1;
+//~ }
+void push(char* data)
+{
+	
+	if (top == NULL)
+    {
+        head =(struct stack *)malloc(sizeof(struct stack));
+        top=head;
+        top->ch=data;
+        //~ printf("%s",top->ch);
+    }
+    else
+    {
+		stack* temp;
+        temp =(struct stack *)malloc(sizeof(struct stack));
+        top->next=temp;
+        temp->ch = data;
+        top = temp;
+    }
+    top->next = NULL;
+    //~ printf("%s",top->ch);
+    //~ count++;
+}
+void pop()
+{
+	stack* temp;
+	temp=head;
+	
+	if(temp->next==NULL)	//one node
+	{
+		temp=NULL;
+		free(head);
+		return ;
+	}	
+	while(temp->next!=top)
+	{
+		temp=temp->next;
+	}
+	temp->next=NULL;
+	free(top);
+	top=temp;
+}	
+			 
 int getTermIndex(char* input)
 {
 	int i;
@@ -33,24 +97,61 @@ void createParseTable(grammar G, Table T, char* ffset[][100],int numofrules)
 	int j=0;
 	int n=-1;
 	int t=-1;
+	for(i=0;i<47;i++)
+	{
+		for(j=0;j<39;j++)
+		{
+			T[i][j]=-1;
+		}
+	}
 	for(i=0;i<numofrules;i++)
 	{
 		n=getNonTermIndex(G.r[i][0]);
-		printf("index of non term is %d\n",n);
+		//~ printf("index of non term is %d\n",n);
 		j=0;
 		while(strcmp(ffset[i][j],"\0")!=0)
 		{
-			printf("Herei is %d and j is %d\n",i,j);
+			//~ printf("Herei is %d and j is %d\n",i,j);
 			t=getTermIndex(ffset[i][j]);
 			j++;
 			T[n][t]=i;
 		}
 	}
-	printf("Asser Rule is 87 %d",T[24][38]);
+	printf("Assert Rule is 87 %d",T[24][38]);
+}
+parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
+{
+	FILE* fp1 =fopen(testcaseFile,"r");
+	parseTree p;
+	buffersize k=600;
+	buffer B;
+	B=(buffer)malloc(k*sizeof(char));
+	int rulenu;
+	memset(B,0,k);
+	push("$");
+	//printf("%s",top->ch);
+	tokenInfo ti;
+	memset(ti.token,0,100);
+	memset(ti.pattern,0,100);
+	printf("here1");
+	ti=getNextToken(fp1,&B,k);
+	//~ strcpy(ti.token,"PQR");
+	printf("token is %s",ti.token);
+	if(strcmp(top->ch,"$")==0)
+	{
+		push(G.r[0][0]);
+		printf("%s",top->ch);
+	}
+	else
+	{
+		rulenu=T[getNonTermIndex(top->ch)][getTermIndex(ti.pattern)];
+	}
+	return p;
+	
 }
 int main()
 {
-	printf("here");
+	//~ printf("here");
 	grammar G;
 	FILE* fp =fopen("Grammar","r");
 	int i,j;
@@ -61,7 +162,7 @@ int main()
 		{
 			j=0;
 			char* token = strtok(string, " ");
-			//printf("I am the fucking token%s\n",token);
+			//printf("I am token%s\n",token);
 			while (token) 
 			{
 				if(strcmp("|",token)==0)
@@ -91,8 +192,9 @@ int main()
 			i++;
 		}
 	}
+	fclose(fp);
 	int numofrules=i;
-	printf("grammar is %s\n",G.r[87][0]);
+	//~ printf("grammar is %s\n",G.r[87][0]);
 	
 	char* ffset[89][100]={{"MAIN","\0"},
 					{"INT","REAL","STRING","MATRIX","SQO","READ","PRINT","ID","FUNID","IF","FUNCTION","\0"},
@@ -198,5 +300,19 @@ int main()
 	//printf("ffset is %s",ffset[87][0]);
 	Table t;
 	createParseTable(G,t,ffset,numofrules);
+	parseInputSourceCode("abcd",t,G);
+	//~ printf("Nanga fanga");
+	push("qwerty");
+	push("qwerty");
+	push("qwerty");
+	push("qwerty");
+	push("qwerty");
+	push("qwerty");
+	//~ printf("%s",top->ch);
+	pop();
+	push("kab");
+	//~ printf("%s",top->ch);
+
+	
 	return 0;
 }

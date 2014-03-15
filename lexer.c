@@ -45,6 +45,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	//int forward;
 
 	//ignores white spaces and comments
+	printf("size of buffer is %d",k);
 	while(A[curr]==' '||A[curr]=='\t'||A[curr]=='\n'||A[curr]=='#')
 	{
 		//printf("I am removing whitesp\n");
@@ -171,7 +172,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	if(A[curr]=='.')
 	{
 		
-		printf("\nHere0\n");
+		printf("\nHere in dot\n");
 		cli=0;
 		memset(currLex,0,100);
 		curr++;
@@ -1278,65 +1279,66 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 		}	
 	}
 }
+printf("token inside is %s\n",ti.token);
 return ti;}
 	//End code fragment 1
 	//ti.line_numb=line_num;
 	
 
-
-int main()
-{
-	FILE *fp=fopen("abcd","r");
-	buffersize k=600;
-	buffer B;
-	B=(buffer)malloc(k*sizeof(char));
-//	printf("here");
-	memset(B,0,k);
-	getStream(fp,&B,k);
-	while(B[curr]!='$')
-	{
-		//printf("I am here\n");
-		printf("Here");
-		tokenInfo ti;
-		memset(ti.token,0,100);
-		memset(ti.pattern,0,100);
-		ti=getNextToken(fp,&B,k);
-		printf("\nFIRST is %s\n%s\n%d\n",ti.pattern,ti.token,ti.line_numb);
-		printf("curr is %c\n",B[curr]);
-	}
-	//tokenInfo ti2;
-	//ti2=getNextToken(fp,&B,k);
-	//printf("%s is buffer",B);
-	//printf("%d is buffer",strlen(B));
-	//printf(" Second Token is = %s\n",ti2.token);
-	//printf("%s is buffer",B);
-	//int i = 0;
-	
-	
-	//buffersize k=600;
-	//buffer B;
-	
-	////printf("%s",B);
-	
-	//while(B[i]!='$')
-	//{
-		//printf("%d %c\n",i,B[i]);
-		//i++;
-	//}
-	//printf("%s",B);
-	//memset(B,0,k);
-	//printf("\nNext\n");
-	//getStream(fp,B,k);
-	
-	//i=0;
-	//while(B[i]!='$')
-	//{
-		//printf("%d %c\n",i,B[i]);
-		//i++;
-	//}
-	//printf("%s",B);
-	//fclose(fp);
-	//printf("\nend");
-	
-	return 0;
-}
+//~ 
+//~ int main()
+//~ {
+	//~ FILE *fp=fopen("abcd","r");
+	//~ buffersize k=600;
+	//~ buffer B;
+	//~ B=(buffer)malloc(k*sizeof(char));
+//~ //	printf("here");
+	//~ memset(B,0,k);
+	//~ getStream(fp,&B,k);
+	//~ while(B[curr]!='$')
+	//~ {
+		//~ //printf("I am here\n");
+		//~ printf("Here");
+		//~ tokenInfo ti;
+		//~ memset(ti.token,0,100);
+		//~ memset(ti.pattern,0,100);
+		//~ ti=getNextToken(fp,&B,k);
+		//~ printf("\nFIRST is %s\n%s\n%d\n",ti.pattern,ti.token,ti.line_numb);
+		//~ printf("curr is %c\n",B[curr]);
+	//~ }
+	//~ //tokenInfo ti2;
+	//~ //ti2=getNextToken(fp,&B,k);
+	//~ //printf("%s is buffer",B);
+	//~ //printf("%d is buffer",strlen(B));
+	//~ //printf(" Second Token is = %s\n",ti2.token);
+	//~ //printf("%s is buffer",B);
+	//~ //int i = 0;
+	//~ 
+	//~ 
+	//~ //buffersize k=600;
+	//~ //buffer B;
+	//~ 
+	//~ ////printf("%s",B);
+	//~ 
+	//~ //while(B[i]!='$')
+	//~ //{
+		//~ //printf("%d %c\n",i,B[i]);
+		//~ //i++;
+	//~ //}
+	//~ //printf("%s",B);
+	//~ //memset(B,0,k);
+	//~ //printf("\nNext\n");
+	//~ //getStream(fp,B,k);
+	//~ 
+	//~ //i=0;
+	//~ //while(B[i]!='$')
+	//~ //{
+		//~ //printf("%d %c\n",i,B[i]);
+		//~ //i++;
+	//~ //}
+	//~ //printf("%s",B);
+	//~ //fclose(fp);
+	//~ //printf("\nend");
+	//~ 
+	//~ return 0;
+//~ }
