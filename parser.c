@@ -125,6 +125,7 @@ parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 	parseTree p;
 	buffersize k=600;
 	buffer B;
+	int r;
 	B=(buffer)malloc(k*sizeof(char));
 	int rulenu;
 	memset(B,0,k);
@@ -135,18 +136,63 @@ parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 	memset(ti.pattern,0,100);
 	printf("here1");
 	ti=getNextToken(fp1,&B,k);
+	//ti=getNextToken(fp1,&B,k);
 	//~ strcpy(ti.token,"PQR");
 	printf("token is %s",ti.token);
 	if(strcmp(top->ch,"$")==0)
 	{
+		printf("Stuck here");
 		push(G.r[0][0]);
 		printf("%s",top->ch);
+		printf("%d",getNonTermIndex(top->ch));
 	}
-	else
+	while((strcmp((top->ch),"$"))!=0)
 	{
-		rulenu=T[getNonTermIndex(top->ch)][getTermIndex(ti.pattern)];
+		if(strcmp(top->ch,"EPSILON")==0)
+		{
+			
+			pop();
+		}
+		else if(getNonTermIndex(top->ch)!=-1)
+		{
+			printf("Stuck here");
+			rulenu=T[getNonTermIndex(top->ch)][getTermIndex(ti.pattern)];
+			if(rulenu==-1)
+			{
+				printf("error");
+				break;
+			}
+			else
+			{
+				r=1;
+				while(G.r[rulenu][r]!="\0")
+				{
+					push(G.r[rulenu][r]);
+					r++;
+					printf("I am on%d",r);
+				}
+			}
+		}
+		
+		else if(getTermIndex(top->ch)!=-1)
+		{
+			if(strcmp((top->ch),ti.token)==0)
+			{
+				pop();
+				ti=getNextToken(fp1,&B,k);
+			}
+			else
+			{
+				printf("error");
+				break;
+			}
+		}
+		else
+		{
+			printf("Unknown Pattern");
+			break;
+		}
 	}
-	return p;
 	
 }
 int main()

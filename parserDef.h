@@ -19,7 +19,8 @@ stack* top=NULL;
 stack* head=NULL;
 struct parseTree
 {
-	struct parseTree* children[10];
+	struct parseTree* children[20];
+	char* child;
 	int numchild;
 };
 typedef struct parseTree parseTree;
