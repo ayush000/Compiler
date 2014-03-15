@@ -7,12 +7,10 @@ FILE *getStream(FILE *fp,buffer *B, buffersize k)
 	//int i;
 	//B=malloc((k+2)*sizeof(char));
 	//fgets(B,k,fp);
-	
-	
 	fread(*B,1,k,fp);
 	char* A=*B;
 	A[((int)strlen(A))-1]='$';
-	//printf("%s\n",A);
+	//~ printf("file that is read is%s\n",A);
 	*B=A;
 	//printf("A number is %c\n",A[9]);
 	return fp;
@@ -41,11 +39,12 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	
 	
 	tokenInfo ti;
+	getStream(fp,&A,k);
 	//char lexeme[100];
 	//int forward;
 
 	//ignores white spaces and comments
-	printf("size of buffer is %d",k);
+	
 	while(A[curr]==' '||A[curr]=='\t'||A[curr]=='\n'||A[curr]=='#')
 	{
 		//printf("I am removing whitesp\n");
@@ -67,12 +66,12 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 			curr++;
 			line_num++;
 		}
-		printf("\nIncurr is %c, %d\n",A[curr],curr);
+		//~ printf("\nIncurr is %c, %d\n",A[curr],curr);
 		
 	}
 	if(strcmp("abcd",searchTok(A[curr]))!=0)//search for single character tokens
 	{
-		printf("\nIncurr is %c, %d\n",A[curr],curr);
+		//~ printf("\nIncurr is %c, %d\n",A[curr],curr);
 		
 		//ti.line_numb=line_num;
 		//memset(ti.pattern,0,sizeof(ti.pattern));
@@ -172,7 +171,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	if(A[curr]=='.')
 	{
 		
-		printf("\nHere in dot\n");
+		//~ printf("\nHere in dot\n");
 		cli=0;
 		memset(currLex,0,100);
 		curr++;
@@ -187,7 +186,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 					curr++;
 					if(A[curr]=='.')
 					{
-						printf("1Here\n");
+						//~ printf("1Here\n");
 						strcpy(ti.token,"AND");
 						strcpy(ti.pattern,".and.");
 						curr++;
@@ -208,7 +207,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 					curr++;
 					if(A[curr]=='.')
 					{
-						printf("Here2\n");
+						//~ printf("Here2\n");
 						strcpy(ti.token,"NOT");
 						strcpy(ti.pattern,".not.");
 						curr++;
@@ -227,13 +226,13 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 				if(A[curr]=='.')
 				{
 					strcpy(ti.token,"OR");
-					printf("Here3\n");
-					printf("Real 2nd is %s",ti.token);
+					//~ printf("Here3\n");
+					//~ printf("Real 2nd is %s",ti.token);
 					strcpy(ti.pattern,".or.");
 					curr++;
 					ti.line_numb=line_num;
 					return ti;
-					printf("\n%c\n",A[curr]);
+					//~ printf("\n%c\n",A[curr]);
 				}
 			}
 		}			
@@ -314,7 +313,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	if(A[lookahead]=='_'){
 		lookahead++;
 		if(lookahead>='0' && lookahead<='9')
-			printf("error1");
+			//~ printf("error1");
 			return ti;
 		if(A[lookahead]=='m'){
 			lookahead++;//can be main or an identifier
@@ -1279,7 +1278,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 		}	
 	}
 }
-printf("token inside is %s\n",ti.token);
+//~ printf("token inside is %s\n",ti.token);
+//~ printf("size of buffer is %d",k);
 return ti;}
 	//End code fragment 1
 	//ti.line_numb=line_num;
