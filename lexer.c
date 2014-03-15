@@ -238,27 +238,27 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 		}			
 	}
 	
-	if(A[curr]=='"')
-	{
-		cli=0;
-		memset(currLex,0,100);
-		currLex[cli]=A[curr];
-		curr++;
-		cli++;
-		while(A[curr]>='a'&& A[curr]<='z' && A[curr]!='"')
-		{
-			currLex[cli]=A[curr];
-			curr++;
-			cli++;
-		}
-		currLex[cli]=A[curr];
-		strcpy(ti.token,"STR");
-		
-		strcpy(ti.pattern,currLex);
-		ti.line_numb=line_num;
-		return ti;
-		curr++;		
-	}
+	//~ if(A[curr]=='"')
+	//~ {
+		//~ cli=0;
+		//~ memset(currLex,0,100);
+		//~ currLex[cli]=A[curr];
+		//~ curr++;
+		//~ cli++;
+		//~ while(A[curr]>='a'&& A[curr]<='z' && A[curr]!='"')
+		//~ {
+			//~ currLex[cli]=A[curr];
+			//~ curr++;
+			//~ cli++;
+		//~ }
+		//~ currLex[cli]=A[curr];
+		//~ strcpy(ti.token,"STR");
+		//~ 
+		//~ strcpy(ti.pattern,currLex);
+		//~ ti.line_numb=line_num;
+		//~ return ti;
+		//~ curr++;		
+	//~ }
 	if(A[curr]>='0' && A[curr]<='9')
 	{
 		cli=0;
@@ -300,7 +300,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	
 	
 	//Begin Code fragment 1
-		int lookahead=curr;
+		//int lookahead=curr;
 	
 	
 	
@@ -310,1035 +310,500 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	
 	
 	
-	if(A[lookahead]=='_'){
-		lookahead++;
-		if(lookahead>='0' && lookahead<='9')
-			//~ printf("error1");
-			return ti;
-		if(A[lookahead]=='m'){
-			lookahead++;//can be main or an identifier
-			if(A[lookahead]=='a'){
-				lookahead++;
-				if(A[lookahead]=='i'){
-					lookahead++;
-					if(A[lookahead]=='n'){
-						lookahead++;
-						strcpy(ti.pattern,"_main");
-						strcpy(ti.token,"MAIN");
-						return ti;
-					}
-					else if((A[lookahead]>='a'&& A[lookahead]<='z')|| (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' && A[lookahead]<='9')){
-						while((A[lookahead]>='a'&& A[lookahead]<='z')|| (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' && A[lookahead]<='9'))	
-							lookahead++;
-						char string[lookahead-curr];
-						int i;
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"FUNID");
-						return ti;
-					}
-				}
-				else if((A[lookahead]>='a'&& A[lookahead]<='z')|| (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' && A[lookahead]<='9')){
-					while((A[lookahead]>='a'&& A[lookahead]<='z')|| (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' && A[lookahead]<='9'))	
-						lookahead++;
-					char string[lookahead-curr];
-					int i;
-					for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"FUNID");
-					return ti;
-				}
+	if(A[curr]=='_'){
+		cli=0;
+		memset(currLex,0,100);
+		currLex[cli]=A[curr];
+		curr++;
+		cli++;
+		if(A[curr]>='0' && A[curr]<='9')
+		{
+			while(A[curr]>='0' && A[curr]<='9')
+			{
+				currLex[cli]=A[curr];
+				cli++;
+				curr++;
 			}
-			else if((A[lookahead]>='a'&& A[lookahead]<='z')|| (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' && A[lookahead]<='9')){
-				while((A[lookahead]>='a'&& A[lookahead]<='z')|| (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' && A[lookahead]<='9'))	
-					lookahead++;
-				char string[lookahead-curr];
-				int i;
-				for( i=0;i<lookahead-curr;i++){
-					string[i]=A[curr+i];
-				}
-				strcpy(ti.pattern,string);
-				strcpy(ti.token,"FUNID");
+			//~ strcpy(ti.pattern,currLex);
+			//~ strcpy(ti.token,"ERROR");
+			printf("Error: Unknown pattern '%s' on line Num %d\n",currLex,line_num);
+			if(A[curr]=='$')
+			{
+				exit(0);
+			}
+			if(A[curr]!='$')
+			{
+				ti=getNextToken(fp,B,k);
 				return ti;
 			}
 		}
-		else if((A[lookahead]>='a'&& A[lookahead]<='z')|| (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' && A[lookahead]<='9')){
-			while((A[lookahead]>='a'&& A[lookahead]<='z')|| (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' && A[lookahead]<='9'))	
-				lookahead++;
-			char string[lookahead-curr];
-			int i;
-			for( i=0;i<lookahead-curr;i++){
-				string[i]=A[curr+i];
+		if(A[curr]=='m'){
+			currLex[cli]=A[curr];
+			printf("After %c\n %d",currLex[cli],cli);
+			cli++;
+			curr++;//can be main or function
+			if(A[curr]=='a'){
+				currLex[cli]=A[curr];
+				cli++;
+				curr++;
+				if(A[curr]=='i'){
+					currLex[cli]=A[curr];
+					cli++;
+					curr++;
+					if(A[curr]=='n'){
+						printf("After %c\n",A[curr]);
+						currLex[cli]=A[curr];
+						cli++;
+						curr++;
+						if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
+						{
+							//~ printf("here");
+							printf("pattern is %s",currLex);
+							strcpy(ti.pattern,currLex);
+							strcpy(ti.token,"MAIN");
+							return ti;
+						}
+					}
+				}
 			}
-			strcpy(ti.pattern,string);
-			strcpy(ti.token,"FUNID");
-			return ti;
-		}		
-	
-	/*
-		while((A[lookahead]>='a'&& A[lookahead]<='z'))|| (A[lookahead]>='A' && A[lookahead]<='Z')) || (A[lookahead]>='0' && A[lookahead]<='9'){
-			lookahead++;
-		while((A[lookahead]>='A' && A[lookahead]<='Z'))
-			lookahead++;
-		while((A[lookahead]>='0' && A[lookahead]<='9'))
-			lookahead++;
-		char string[lookahead-curr];
-		int i;
-		for( i=0;i<lookahead-curr;i++){
-			string[i]=A[curr+i];
 		}
-		strcpy(ti.pattern,string);
+		while((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9'))
+		{
+			currLex[cli]=A[curr];
+			cli++;
+			curr++;
+		}
+		printf("pattern is %s",currLex);
+		strcpy(ti.pattern,currLex);
 		strcpy(ti.token,"FUNID");
 		return ti;
-		}
-	}
-	else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z')){
-		while(A[lookahead]>='a' && A[lookahead]<='z' || A[lookahead]>='A' && A[lookahead]<='Z')
-			lookahead++;
-		if(A[lookahead]>='0' && A[lookahead]<='9')
-			lookahead++;
-		int i;
-		char string[lookahead-curr];
-		for( i=0;i<lookahead-curr;i++){
-			string[i]=A[curr+i];
-		}
-		strcpy(ti.pattern,string);
-		strcpy(ti.token,"ID");
-		return ti;
 	}
 	
-		while(A[lookahead]>='a' && A[lookahead]<='z' || A[lookahead]>='A' && A[lookahead]<='Z'){
-		lookahead++;
-		} 	
-		if(A[lookahead]>='0' && A[lookahead]<='9'){
-			int i;
-			for( i=0;i<lookahead-curr;i++){
-			string[i]=A[curr+i];
+	/*
+	 * end endif else if int read real print string matrix
+	 * */
+	cli=0;
+	memset(currLex,0,100);
+	if(A[curr]=='e')
+	{
+		currLex[cli]=A[curr];
+		curr++;
+		cli++;
+		if(A[curr]=='n')
+		{
+			currLex[cli]=A[curr];
+			curr++;
+			cli++;
+			if(A[curr]=='d')
+			{
+				currLex[cli]=A[curr];
+				cli++;
+				curr++;
+				if(A[curr]=='i')
+				{
+					currLex[cli]=A[curr];
+					cli++;
+					curr++;
+					if(A[curr]=='f')
+					{
+						currLex[cli]=A[curr];
+						cli++;
+						curr++;
+						if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
+						{
+							//~ printf("here");
+							//~ printf("pattern is %s",currLex);
+							strcpy(ti.pattern,currLex);
+							strcpy(ti.token,"ENDIF");
+							return ti;
+						}
+					}
+				}
+				else if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
+				{
+					//~ printf("here");
+					//~ printf("pattern is %s",currLex);
+					strcpy(ti.pattern,currLex);
+					strcpy(ti.token,"END");
+					return ti;
+				}
+			}
 		}
-		strcpy(ti.pattern,string);
-		strcpy(ti.token,"ID");
-		return ti;
+		else if(A[curr]=='l')
+		{
+			currLex[cli]=A[curr];
+			curr++;
+			cli++;
+			if(A[curr]=='s')
+			{
+				currLex[cli]=A[curr];
+				cli++;
+				curr++;
+				if(A[curr]=='e')
+				{
+					currLex[cli]=A[curr];
+					cli++;
+					curr++;
+					if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
+					{
+						//~ printf("here");
+						//~ printf("pattern is %s",currLex);
+						strcpy(ti.pattern,currLex);
+						strcpy(ti.token,"ELSE");
+						return ti;
+					}
+				}
+			}
+		}
+	}
+	
+	else if(A[curr]=='i')
+	{
+		currLex[cli]=A[curr];
+		cli++;
+		curr++;
+		if(A[curr]=='n')
+		{
+			currLex[cli]=A[curr];
+			cli++;
+			curr++;
+			if(A[curr]=='t')
+			{
+				currLex[cli]=A[curr];
+				cli++;
+				curr++;
+				if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
+				{
+					//~ printf("here");
+					//~ printf("pattern is %s",currLex);
+					strcpy(ti.pattern,currLex);
+					strcpy(ti.token,"INT");
+					return ti;
+				}
+			}
+		}
+		if(A[curr]=='f')
+			{
+				currLex[cli]=A[curr];
+				cli++;
+				curr++;
+				if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
+				{
+					//~ printf("here");
+					//~ printf("pattern is %s",currLex);
+					strcpy(ti.pattern,currLex);
+					strcpy(ti.token,"IF");
+					return ti;
+				}
+			}
+	}
+	else if(A[curr]=='r')
+	{
+		currLex[cli]=A[curr];
+		curr++;
+		cli++;
+		if(A[curr]=='e')
+		{
+			currLex[cli]=A[curr];
+			cli++;
+			curr++;
+			if(A[curr]=='a')
+			{
+				currLex[cli]=A[curr];
+				cli++;
+				curr++;
+				if(A[curr]=='l')
+				{
+					currLex[cli]=A[curr];
+					cli++;
+					curr++;
+					if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
+					{
+						//~ printf("here");
+						//~ printf("pattern is %s",currLex);
+						strcpy(ti.pattern,currLex);
+						strcpy(ti.token,"REAL");
+						return ti;
+					}
+				}
+				else if(A[curr]=='d')
+				{
+					currLex[cli]=A[curr];
+					cli++;
+					curr++;
+					if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
+					{
+						//~ printf("here");
+						//~ printf("pattern is %s",currLex);
+						strcpy(ti.pattern,currLex);
+						strcpy(ti.token,"READ");
+						return ti;
+					}
+				}
+			}
+		}
+	}
+	else if(A[curr]=='p')
+	{
+		currLex[cli]=A[curr];
+		curr++;
+		cli++;
+		if(A[curr]=='r')
+		{
+			currLex[cli]=A[curr];
+			curr++;
+			cli++;
+			if(A[curr]=='i')
+			{
+				currLex[cli]=A[curr];
+				cli++;
+				curr++;
+				if(A[curr]=='n')
+				{
+					currLex[cli]=A[curr];
+					cli++;
+					curr++;
+					if(A[curr]=='t')
+					{
+						currLex[cli]=A[curr];
+						cli++;
+						curr++;
+						if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
+						{
+							//~ printf("here");
+							//~ printf("pattern is %s",currLex);
+							strcpy(ti.pattern,currLex);
+							strcpy(ti.token,"PRINT");
+							return ti;
+						}
+					}
+				}
+			}
+		}
+	}
+	else if(A[curr]=='s')
+	{
+		currLex[cli]=A[curr];
+		curr++;
+		cli++;
+		if(A[curr]=='t')
+		{
+			currLex[cli]=A[curr];
+			curr++;
+			cli++;
+			if(A[curr]=='r')
+			{
+				currLex[cli]=A[curr];
+				curr++;
+				cli++;
+				if(A[curr]=='i')
+				{
+					currLex[cli]=A[curr];
+					cli++;
+					curr++;
+					if(A[curr]=='n')
+					{
+						currLex[cli]=A[curr];
+						cli++;
+						curr++;
+						if(A[curr]=='g')
+						{
+							currLex[cli]=A[curr];
+							cli++;
+							curr++;
+							if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
+							{
+								//~ printf("here");
+								//~ printf("pattern is %s",currLex);
+								strcpy(ti.pattern,currLex);
+								strcpy(ti.token,"STRING");
+								return ti;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	else if(A[curr]=='m')
+	{
+		currLex[cli]=A[curr];
+		curr++;
+		cli++;
+		if(A[curr]=='a')
+		{
+			currLex[cli]=A[curr];
+			curr++;
+			cli++;
+			if(A[curr]=='t')
+			{
+				currLex[cli]=A[curr];
+				curr++;
+				cli++;
+				if(A[curr]=='r')
+				{
+					currLex[cli]=A[curr];
+					cli++;
+					curr++;
+					if(A[curr]=='i')
+					{
+						currLex[cli]=A[curr];
+						cli++;
+						curr++;
+						if(A[curr]=='x')
+						{
+							currLex[cli]=A[curr];
+							cli++;
+							curr++;
+							if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
+							{
+								//~ printf("here");
+								//~ printf("pattern is %s",currLex);
+								strcpy(ti.pattern,currLex);
+								strcpy(ti.token,"MATRIX");
+								return ti;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	if((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9'))
+	{
+		//~ printf("ID sensed\n");
+		while((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z'))
+		{
+			currLex[cli]=A[curr];
+			cli++;
+			curr++;
+		}
+		printf("%s",currLex);
+		if(A[curr]>='0'&&A[curr]<='9')
+		{
+			int i=0;
+			while(A[curr]>='0'&&A[curr]<='9')
+			{
+				i++;
+				currLex[cli]=A[curr];
+				cli++;
+				curr++;
+			}
+			if(i>1)
+			{
+				printf("Error: Unknown pattern '%s' on line Num %d\n",currLex,line_num);
+				if(A[curr]=='$')
+				{
+					exit(0);
+				}
+				if(A[curr]!='$')
+					{
+						ti=getNextToken(fp,B,k);
+						return ti;
+					}
+			}
+				
+		}
+		if(cli>20)
+		{
+			printf("Error:Token ID:%s at line number %d is of Length %d which is more than 20\n",currLex,line_num, cli);
+			if(A[curr]=='$')
+			{
+				exit(0);
+			}
+			if(A[curr]!='$')
+				{
+					ti=getNextToken(fp,B,k);
+					return ti;
+				}
 		}
 		else
-			printf("error2");
-	} */
-	
-	
-	
-	
-	
-	// END
-	
-	
-	
-	
-	if(A[lookahead]=='e'){
-		lookahead++;
-		if(A[lookahead]=='n'){
-			lookahead++;
-			if(A[lookahead]=='d'){
-				lookahead++;
-				if(A[lookahead]=='i'){
-					if(A[lookahead]=='f'){
-						strcpy(ti.pattern,"endif");
-						strcpy(ti.token,"ENDIF");
-					}
-				}
-				else{
-					strcpy(ti.pattern,"end");
-					strcpy(ti.token,"END");
-					return ti;	
-				}
-			}
-			else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-				else{
-					while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-						lookahead++;
-					if(A[lookahead]>='0' && A[lookahead]<='9'){
-						int i;
-						char string[lookahead-curr];
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"ID");
-						return ti;
-					}
-				}
-			}
-		}
-		else if(A[lookahead]=='l'){
-			if(A[lookahead]=='s'){
-				if(A[lookahead]=='e'){
-					strcpy(ti.pattern,"else");
-					strcpy(ti.token,"ELSE");
-					return ti;
-				}
-				else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-					if(A[lookahead]>='0' && A[lookahead]<='9'){
-						int i;
-						char string[lookahead-curr];
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"ID");
-						return ti;
-					}
-					else{
-						while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-							lookahead++;
-						if(A[lookahead]>='0' && A[lookahead]<='9'){
-							int i;
-							char string[lookahead-curr];
-							for( i=0;i<lookahead-curr;i++){
-								string[i]=A[curr+i];
-							}
-							strcpy(ti.pattern,string);
-							strcpy(ti.token,"ID");
-							return ti;
-						}
-					}
-				}
-			}
-			else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-				else{
-					while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-						lookahead++;
-					if(A[lookahead]>='0' && A[lookahead]<='9'){
-						int i;
-						char string[lookahead-curr];
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"ID");
-						return ti;
-					}
-				}
-			}
-		
-	    }
-		else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-			if(A[lookahead]>='0' && A[lookahead]<='9'){
-				int i;
-				char string[lookahead-curr];
-				for( i=0;i<lookahead-curr;i++){
-					string[i]=A[curr+i];
-				}
-				strcpy(ti.pattern,string);
-				strcpy(ti.token,"ID");
-				return ti;
-			}
-			else{
-				while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-					lookahead++;
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-			}
-		}
-	}
-
-
-
-	    
-	/*	else{
-			while(A[lookahead]>='a' && A[lookahead]<='z' || A[lookahead]>='A' && A[lookahead]<='Z')
-				lookahead++;
-			if(A[lookahead]>='0' ||A[lookahead]<='9'){
-				char string[lookahead-curr];
-				strcpy(ti.pattern,string);
-				strcpy(ti.token,"ID");
-				return ti;
-			}
-			
-		}	
-	}
-	
-	*/
-	
-	
-	
-	
-	// MATRIX
-	
-	
-	
-	
-	
-	if(A[lookahead]=='m'){// matrix
-		if(A[lookahead]=='a'){
-			if(A[lookahead]=='t'){
-				if(A[lookahead]=='r'){
-					if(A[lookahead]=='i'){
-						if(A[lookahead]=='x'){
-							strcpy(ti.pattern,"matrix");
-							strcpy(ti.token,"MATRIX");
-							return ti;
-						}
-						else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-							if(A[lookahead]>='0' && A[lookahead]<='9'){
-								int i;
-								char string[lookahead-curr];
-								for( i=0;i<lookahead-curr;i++){
-									string[i]=A[curr+i];
-								}
-								strcpy(ti.pattern,string);
-								strcpy(ti.token,"ID");
-								return ti;
-							}
-							else{
-								while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-									lookahead++;
-								if(A[lookahead]>='0' && A[lookahead]<='9'){
-								int i;
-								char string[lookahead-curr];
-								for( i=0;i<lookahead-curr;i++){
-									string[i]=A[curr+i];
-								}
-								strcpy(ti.pattern,string);
-								strcpy(ti.token,"ID");
-								return ti;
-							}
-						}
-					}
-				}
-				else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-							if(A[lookahead]>='0' && A[lookahead]<='9'){
-								int i;
-								char string[lookahead-curr];
-								for( i=0;i<lookahead-curr;i++){
-									string[i]=A[curr+i];
-								}
-								strcpy(ti.pattern,string);
-								strcpy(ti.token,"ID");
-								return ti;
-							}
-							else{
-								while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-									lookahead++;
-								if(A[lookahead]>='0' && A[lookahead]<='9'){
-								int i;
-								char string[lookahead-curr];
-								for( i=0;i<lookahead-curr;i++){
-									string[i]=A[curr+i];
-								}
-								strcpy(ti.pattern,string);
-								strcpy(ti.token,"ID");
-								return ti;
-								}
-							}
-						}
-					}
-					else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-						if(A[lookahead]>='0' && A[lookahead]<='9'){
-							int i;
-							char string[lookahead-curr];
-							for( i=0;i<lookahead-curr;i++){
-								string[i]=A[curr+i];
-							}
-							strcpy(ti.pattern,string);
-							strcpy(ti.token,"ID");
-							return ti;
-						}
-						else{
-							while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-								lookahead++;
-							if(A[lookahead]>='0' && A[lookahead]<='9'){
-							int i;
-							char string[lookahead-curr];
-							for( i=0;i<lookahead-curr;i++){
-								string[i]=A[curr+i];
-							}
-							strcpy(ti.pattern,string);
-							strcpy(ti.token,"ID");
-							return ti;
-						}
-					}
-				}
-			}
-			else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-				else{
-					while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-						lookahead++;
-					if(A[lookahead]>='0' && A[lookahead]<='9'){
-						int i;
-						char string[lookahead-curr];
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"ID");
-						return ti;
-					}
-				}
-			}
-		}
-		else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-			if(A[lookahead]>='0' && A[lookahead]<='9'){
-			int i;
-			char string[lookahead-curr];
-			for( i=0;i<lookahead-curr;i++){
-				string[i]=A[curr+i];
-			}
-			strcpy(ti.pattern,string);
-			strcpy(ti.token,"ID");
-			return ti;
-			}
-			else{
-				while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-					lookahead++;
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-			}
-		}
-	}
-	
-	
-	
-	
-	//INT
-	
-	
-	
-	
-	if(A[lookahead]=='i'){
-		if(A[lookahead]=='n'){
-			if(A[lookahead]=='t'){
-				strcpy(ti.pattern,"int");
-				strcpy(ti.token,"INT");
-				return ti;
-			}
-			else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-				int i;
-				char string[lookahead-curr];
-				for( i=0;i<lookahead-curr;i++){
-					string[i]=A[curr+i];
-				}
-				strcpy(ti.pattern,string);
-				strcpy(ti.token,"ID");
-				return ti;
-				}
-				else{
-					while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-						lookahead++;
-					if(A[lookahead]>='0' && A[lookahead]<='9'){
-						int i;
-						char string[lookahead-curr];
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"ID");
-						return ti;
-					}
-				}
-			}
-			
-		}
-		else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-			if(A[lookahead]>='0' && A[lookahead]<='9'){
-				int i;
-				char string[lookahead-curr];
-				for( i=0;i<lookahead-curr;i++){
-					string[i]=A[curr+i];
-				}
-				strcpy(ti.pattern,string);
-				strcpy(ti.token,"ID");
-				return ti;
-			}
-			else{
-				while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-					lookahead++;
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-			}
-		}
-	}			
-	
-	
-	
-	
-	
-	// REAL AND READ
-	
-	
-	
-	
-	
-	if(A[lookahead]=='r'){
-		if(A[lookahead]=='e'){
-			if(A[lookahead]=='a'){
-				if(A[lookahead]=='l'){
-					strcpy(ti.pattern,"real");
-					strcpy(ti.token,"REAL");
-					return ti;
-				}
-				else if(A[lookahead]=='d'){
-					strcpy(ti.pattern,"read");
-					strcpy(ti.token,"READ");
-					return ti;
-				}
-				else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-					if(A[lookahead]>='0' && A[lookahead]<='9'){
-						int i;
-						char string[lookahead-curr];
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"ID");
-						return ti;
-					}
-					else{
-						while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-						lookahead++;
-						if(A[lookahead]>='0' && A[lookahead]<='9'){
-							int i;
-							char string[lookahead-curr];
-							for( i=0;i<lookahead-curr;i++){
-								string[i]=A[curr+i];
-							}
-							strcpy(ti.pattern,string);
-							strcpy(ti.token,"ID");
-							return ti;
-						}
-					}
-				}
-			}
-			else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-				else{
-					while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-						lookahead++;
-					if(A[lookahead]>='0' && A[lookahead]<='9'){
-						int i;
-						char string[lookahead-curr];
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"ID");
-						return ti;
-					}
-				}
-			}
-		}
-		else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-			if(A[lookahead]>='0' && A[lookahead]<='9'){
-				int i;
-				char string[lookahead-curr];
-				for( i=0;i<lookahead-curr;i++){
-					string[i]=A[curr+i];
-				}
-				strcpy(ti.pattern,string);
-				strcpy(ti.token,"ID");
-				return ti;
-			}
-			else{
-				while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-					lookahead++;
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-			}
-		}
-	}
-	
-	
-	
-	
-	
-	
-	//STRING
-	
-	
-	
-	
-	
-	
-	if(A[lookahead]=='s'){
-		if(A[lookahead]=='t'){
-			if(A[lookahead]=='r'){
-				if(A[lookahead]=='i'){
-					if(A[lookahead]=='n'){
-						if(A[lookahead]=='g'){
-							strcpy(ti.pattern,"string");
-							strcpy(ti.token,"STRING");
-							return ti;
-						}
-						else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-							if(A[lookahead]>='0' && A[lookahead]<='9'){
-								int i;
-								char string[lookahead-curr];
-								for( i=0;i<lookahead-curr;i++){
-									string[i]=A[curr+i];
-								}
-								strcpy(ti.pattern,string);
-								strcpy(ti.token,"ID");
-								return ti;
-							}
-						}	
-						else{
-							while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-								lookahead++;
-							if(A[lookahead]>='0' && A[lookahead]<='9'){
-								int i;
-								char string[lookahead-curr];
-								for( i=0;i<lookahead-curr;i++){
-									string[i]=A[curr+i];
-								}
-								strcpy(ti.pattern,string);
-								strcpy(ti.token,"ID");
-								return ti;
-							}
-						}
-					}
-				}
-				else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-					if(A[lookahead]>='0' && A[lookahead]<='9'){
-						int i;
-						char string[lookahead-curr];
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"ID");
-						return ti;
-					}
-					else{
-						while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-							lookahead++;
-						if(A[lookahead]>='0' && A[lookahead]<='9'){
-							int i;
-							char string[lookahead-curr];
-							for( i=0;i<lookahead-curr;i++){
-								string[i]=A[curr+i];
-							}
-							strcpy(ti.pattern,string);
-							strcpy(ti.token,"ID");
-							return ti;
-						}
-					}
-				}
-			}
-			else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-				else{
-					while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-						lookahead++;
-					if(A[lookahead]>='0' && A[lookahead]<='9'){
-						int i;
-						char string[lookahead-curr];
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"ID");
-						return ti;
-					}
-				}
-			}
-		}
-		else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-			if(A[lookahead]>='0' && A[lookahead]<='9'){
-				int i;
-				char string[lookahead-curr];
-				for( i=0;i<lookahead-curr;i++){
-					string[i]=A[curr+i];
-				}
-				strcpy(ti.pattern,string);
-				strcpy(ti.token,"ID");
-				return ti;
-			}
-			else{
-				while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-					lookahead++;
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-			}
-		}
-	}
-	else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-		if(A[lookahead]>='0' && A[lookahead]<='9'){
-			int i;
-			char string[lookahead-curr];
-			for( i=0;i<lookahead-curr;i++){
-				string[i]=A[curr+i];
-			}
-			strcpy(ti.pattern,string);
+		{
+			strcpy(ti.pattern,currLex);
 			strcpy(ti.token,"ID");
 			return ti;
 		}
-		else{
-			while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-				lookahead++;
-			if(A[lookahead]>='0' && A[lookahead]<='9'){
-				int i;
-				char string[lookahead-curr];
-				for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-				}
-				strcpy(ti.pattern,string);
-				strcpy(ti.token,"ID");
-				return ti;
-			}
-		}
 	}
-	
-	
-	
-	
-	
-	//IF
-	
-	
-	
-	
-	
-	if(A[lookahead]=='i'){
-		if(A[lookahead]=='f'){
-			strcpy(ti.pattern,"if");
-			strcpy(ti.token,"IF");
+	if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')||(strcmp(searchTok(A[curr]),"abcd")!=0)||A[curr]=='_'||A[curr]=='='||A[curr]=='<'||A[curr]=='>'||A[curr]=='$'))
+	{
+		cli=0;
+		memset(currLex,0,100);
+		currLex[cli]=A[curr];
+		cli++;
+		curr++;
+		printf("Error: Unknown Token:%s at line number %d\n",currLex,line_num);
+		if(A[curr]=='$')
+		{
+			exit(0);
+		}
+		//~ if(!(A[curr]=='$'||A[curr]=='\n'))
+		//~ {
+			//~ printf("char is %c\n",A[curr]);
+			ti=getNextToken(fp,B,k);
 			return ti;
 		}
-		else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-			if(A[lookahead]>='0' && A[lookahead]<='9'){
-				int i;
-				char string[lookahead-curr];
-				for( i=0;i<lookahead-curr;i++){
-					string[i]=A[curr+i];
-				}
-				strcpy(ti.pattern,string);
-				strcpy(ti.token,"ID");
-				return ti;
-			}
-			else{
-				while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-					lookahead++;
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-			}
-		}	
-		
-	}
-
-
-
-
-
-//  PRINT
-	
-
-
-
-	if(A[lookahead]=='p'){
-		if(A[lookahead]=='r'){
-			if(A[lookahead]=='i'){
-				if(A[lookahead]=='n'){
-					if(A[lookahead]=='t'){
-						strcpy(ti.pattern,"print");
-						strcpy(ti.token,"PRINT");
-						return ti;
-					}
-					else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-						if(A[lookahead]>='0' && A[lookahead]<='9'){
-							int i;
-							char string[lookahead-curr];
-							for( i=0;i<lookahead-curr;i++){
-								string[i]=A[curr+i];
-							}
-							strcpy(ti.pattern,string);
-							strcpy(ti.token,"ID");
-							return ti;
-						}
-						else{
-							while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-								lookahead++;
-							if(A[lookahead]>='0' && A[lookahead]<='9'){
-								int i;
-								char string[lookahead-curr];
-								for( i=0;i<lookahead-curr;i++){
-									string[i]=A[curr+i];
-								}
-								strcpy(ti.pattern,string);
-								strcpy(ti.token,"ID");
-								return ti;
-							}
-						}
-					}	
-				}
-				else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-					if(A[lookahead]>='0' && A[lookahead]<='9'){
-						int i;
-						char string[lookahead-curr];
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"ID");
-						return ti;
-						}
-					else{
-						while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-							lookahead++;
-						if(A[lookahead]>='0' && A[lookahead]<='9'){
-							int i;
-							char string[lookahead-curr];
-							for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-							}
-							strcpy(ti.pattern,string);
-							strcpy(ti.token,"ID");
-							return ti;
-						}
-					}
-				}	
-			}
-			else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-				else{
-					while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-						lookahead++;
-					if(A[lookahead]>='0' && A[lookahead]<='9'){
-						int i;
-						char string[lookahead-curr];
-						for( i=0;i<lookahead-curr;i++){
-							string[i]=A[curr+i];
-						}
-						strcpy(ti.pattern,string);
-						strcpy(ti.token,"ID");
-						return ti;
-					}
-				}
-			}	
-		}
-		else if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-			if(A[lookahead]>='0' && A[lookahead]<='9'){
-				int i;
-				char string[lookahead-curr];
-				for( i=0;i<lookahead-curr;i++){
-					string[i]=A[curr+i];
-				}
-				strcpy(ti.pattern,string);
-				strcpy(ti.token,"ID");
-				return ti;
-			}
-			else{
-				while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-					lookahead++;
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-			}
-		}	
-	}
-	if(((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z' )) && (A[lookahead]!='e' && A[lookahead]!='i' && A[lookahead]!='r' && A[lookahead]!='s' && A[lookahead]!='m' && A[lookahead]!='i' && A[lookahead]!='r' && A[lookahead]!='p')){
-		if((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z') || (A[lookahead]>='0' ||A[lookahead]<='9')){
-			if(A[lookahead]>='0' && A[lookahead]<='9'){
-				int i;
-				char string[lookahead-curr];
-				for( i=0;i<lookahead-curr;i++){
-					string[i]=A[curr+i];
-				}
-				strcpy(ti.pattern,string);
-				strcpy(ti.token,"ID");
-				return ti;
-			}
-			else{
-				while((A[lookahead]>='a' && A[lookahead]<='z') || (A[lookahead]>='A' && A[lookahead]<='Z'))
-					lookahead++;
-				if(A[lookahead]>='0' && A[lookahead]<='9'){
-					int i;
-					char string[lookahead-curr];
-					for( i=0;i<lookahead-curr;i++){
-						string[i]=A[curr+i];
-					}
-					strcpy(ti.pattern,string);
-					strcpy(ti.token,"ID");
-					return ti;
-				}
-			}
-		}	
-	}
+	//~ }
+	strcpy(ti.token,"Here");
+	return ti;
 }
-//~ printf("token inside is %s\n",ti.token);
-//~ printf("size of buffer is %d",k);
-return ti;}
 	//End code fragment 1
 	//ti.line_numb=line_num;
 	
 
-//~ 
-//~ int main()
-//~ {
-	//~ FILE *fp=fopen("abcd","r");
-	//~ buffersize k=600;
-	//~ buffer B;
-	//~ B=(buffer)malloc(k*sizeof(char));
-//~ //	printf("here");
-	//~ memset(B,0,k);
-	//~ getStream(fp,&B,k);
-	//~ while(B[curr]!='$')
-	//~ {
-		//~ //printf("I am here\n");
-		//~ printf("Here");
-		//~ tokenInfo ti;
-		//~ memset(ti.token,0,100);
-		//~ memset(ti.pattern,0,100);
-		//~ ti=getNextToken(fp,&B,k);
-		//~ printf("\nFIRST is %s\n%s\n%d\n",ti.pattern,ti.token,ti.line_numb);
-		//~ printf("curr is %c\n",B[curr]);
-	//~ }
-	//~ //tokenInfo ti2;
-	//~ //ti2=getNextToken(fp,&B,k);
-	//~ //printf("%s is buffer",B);
-	//~ //printf("%d is buffer",strlen(B));
-	//~ //printf(" Second Token is = %s\n",ti2.token);
-	//~ //printf("%s is buffer",B);
-	//~ //int i = 0;
-	//~ 
-	//~ 
-	//~ //buffersize k=600;
-	//~ //buffer B;
-	//~ 
-	//~ ////printf("%s",B);
-	//~ 
-	//~ //while(B[i]!='$')
-	//~ //{
-		//~ //printf("%d %c\n",i,B[i]);
-		//~ //i++;
-	//~ //}
-	//~ //printf("%s",B);
-	//~ //memset(B,0,k);
-	//~ //printf("\nNext\n");
-	//~ //getStream(fp,B,k);
-	//~ 
-	//~ //i=0;
-	//~ //while(B[i]!='$')
-	//~ //{
-		//~ //printf("%d %c\n",i,B[i]);
-		//~ //i++;
-	//~ //}
-	//~ //printf("%s",B);
-	//~ //fclose(fp);
-	//~ //printf("\nend");
-	//~ 
-	//~ return 0;
-//~ }
+
+int main()
+{
+	FILE *fp=fopen("abcd","r");
+	buffersize k=600;
+	buffer B;
+	B=(buffer)malloc(k*sizeof(char));
+//	printf("here");
+	memset(B,0,k);
+	getStream(fp,&B,k);
+	while(B[curr]!='$')
+	{
+		//printf("I am here\n");
+		printf("Here");
+		tokenInfo ti;
+		memset(ti.token,0,100);
+		memset(ti.pattern,0,100);
+		ti=getNextToken(fp,&B,k);
+		printf("\nFIRST is %s\n%s\n%d\n",ti.pattern,ti.token,ti.line_numb);
+		printf("curr is %c\n",B[curr]);
+	}
+	//tokenInfo ti2;
+	//ti2=getNextToken(fp,&B,k);
+	//printf("%s is buffer",B);
+	//printf("%d is buffer",strlen(B));
+	//printf(" Second Token is = %s\n",ti2.token);
+	//printf("%s is buffer",B);
+	//int i = 0;
+	
+	
+	//buffersize k=600;
+	//buffer B;
+	
+	////printf("%s",B);
+	
+	//while(B[i]!='$')
+	//{
+		//printf("%d %c\n",i,B[i]);
+		//i++;
+	//}
+	//printf("%s",B);
+	//memset(B,0,k);
+	//printf("\nNext\n");
+	//getStream(fp,B,k);
+	
+	//i=0;
+	//while(B[i]!='$')
+	//{
+		//printf("%d %c\n",i,B[i]);
+		//i++;
+	//}
+	//printf("%s",B);
+	//fclose(fp);
+	//printf("\nend");
+	
+	return 0;
+}

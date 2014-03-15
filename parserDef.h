@@ -20,7 +20,10 @@ stack* head=NULL;
 struct parseTree
 {
 	struct parseTree* children[20];
-	char* child;
+	char* token;
 	int numchild;
+	char* lexeme;
 };
 typedef struct parseTree parseTree;
+parseTree* node;
+parseTree* curr;

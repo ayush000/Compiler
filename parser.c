@@ -142,7 +142,12 @@ parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 	if(strcmp(top->ch,"$")==0)
 	{
 		printf("Stuck here");
+		node=(struct parseTree*)malloc(sizeof(struct parseTree));
 		push(G.r[0][0]);
+		node->token=top->ch;
+		node->lexeme=NULL;
+		node->numchild=0;
+		curr=node;
 		printf("%s",top->ch);
 		printf("%d",getNonTermIndex(top->ch));
 	}
@@ -150,12 +155,11 @@ parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 	{
 		if(strcmp(top->ch,"EPSILON")==0)
 		{
-			
 			pop();
 		}
 		else if(getNonTermIndex(top->ch)!=-1)
 		{
-			printf("Stuck here");
+			//~ printf("Stuck here");
 			rulenu=T[getNonTermIndex(top->ch)][getTermIndex(ti.pattern)];
 			if(rulenu==-1)
 			{
@@ -167,8 +171,18 @@ parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 				r=1;
 				while(G.r[rulenu][r]!="\0")
 				{
-					push(G.r[rulenu][r]);
 					r++;
+				}
+				int numOfc=r-1;
+				curr->numchild=numOfc;
+				while(r>0)
+				{
+					r--;
+					push(G.r[rulenu][r]);
+					curr=curr->children[numOfc-r];
+					curr=(struct parseTree*)malloc(sizeof(struct parseTree));
+					curr->token=top->ch;
+					curr->lexeme=NULL;
 					printf("I am on%d",r);
 				}
 			}
@@ -347,16 +361,15 @@ int main()
 	Table t;
 	createParseTable(G,t,ffset,numofrules);
 	parseInputSourceCode("abcd",t,G);
-	//~ printf("Nanga fanga");
-	push("qwerty");
-	push("qwerty");
-	push("qwerty");
-	push("qwerty");
-	push("qwerty");
-	push("qwerty");
+	//~ push("qwerty");
+	//~ push("qwerty");
+	//~ push("qwerty");
+	//~ push("qwerty");
+	//~ push("qwerty");
+	//~ push("qwerty");
 	//~ printf("%s",top->ch);
-	pop();
-	push("kab");
+	//~ pop();
+	//~ push("kab");
 	//~ printf("%s",top->ch);
 
 	
