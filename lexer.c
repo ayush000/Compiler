@@ -784,8 +784,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	//End code fragment 1
 	//ti.line_numb=line_num;
 	
-//~ 
-//~ 
+
+
 //~ int main()
 //~ {
 	//~ FILE *fp=fopen("testg","r");

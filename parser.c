@@ -114,15 +114,18 @@ void createParseTable(grammar G, Table T, char* ffset[][100],int numofrules)
 			//~ printf("Herei is %d and j is %d\n",i,j);
 			t=getTermIndex(ffset[i][j]);
 			j++;
+			if(T[n][t]!=-1) 
+			{
+				printf("!!!!!!!!!!!!!!!!  conflict in parse table!!!!!!!!!!!!\n %d %d",n,t);
+			}
 			T[n][t]=i;
 		}
 	}
-	printf("Assert Rule is 87 %d",T[24][38]);
+	//~ printf("Assert Rule is 87 %d",T[24][38]);
 }
-parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
+parseTree* parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 {
 	FILE* fp1 =fopen(testcaseFile,"r");
-	parseTree p;
 	buffersize k=600;
 	buffer B;
 	int gindex;
@@ -130,6 +133,7 @@ parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 	int rulenu;
 	memset(B,0,k);
 	push("$");
+	printf("Pushed to stack :%s\n",top->ch);
 	//~ printf("%s",top->ch);
 	tokenInfo ti;
 	memset(ti.token,0,100);
@@ -141,8 +145,11 @@ parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 	//~ printf("token is %s",ti.token);
 	node=(struct parseTree*)malloc(sizeof(struct parseTree));
 	push(G.r[0][0]);
+	printf("Pushed to stack :%s\n",top->ch);
 	node->parent=NULL;
+	strcpy(node->parentNodeSymbol,"ROOT");
 	strcpy(node->token,top->ch);
+	strcpy(node->lexemeCurrentNode,"-");
 	//~ printf("%s",node->token);
 	//~ node->lexeme=NULL;
 	node->numchild=0;
@@ -150,20 +157,21 @@ parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 	int x = strcmp("$","$");
 	//~ printf("\nassert top is $%d\n",x);
 	//~ printf("%d",getNonTermIndex(top->ch));
-	if((strcmp((top->ch),"$"))!=0)
+	while((strcmp((top->ch),"$"))!=0)
 	{
 		if(strcmp(top->ch,"EPSILON")==0)
 		{
+			printf("Popping from stack :%s\n",top->ch);
 			pop();
 		}
 		else if(getNonTermIndex(top->ch)!=-1)
 		{
-			printf("non term of %s index is %d\ntermindex of %s is %d\n",top->ch,getNonTermIndex(top->ch),ti.token,getTermIndex(ti.token));
+			//~ printf("non term of %s index is %d\ntermindex of %s is %d\n",top->ch,getNonTermIndex(top->ch),ti.token,getTermIndex(ti.token));
 			rulenu=T[getNonTermIndex(top->ch)][getTermIndex(ti.token)];
 			if(rulenu==-1)
 			{
 				printf("Syntactic error");
-				//~ break;
+				break;
 			}
 			else
 			{
@@ -177,15 +185,20 @@ parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 				int numOfc=gindex-1;
 				curr1->numchild=numOfc;
 				parseTree* tempnode=curr1;
+				printf("Popping from stack :%s\n",top->ch);
+				pop();
 				while(gindex>1)
 				{
 					gindex--;
 					push(G.r[rulenu][gindex]);
+					printf("Pushed to stack :%s\n",top->ch);
 					//~ printf("gindex is %d\n",gindex);
 					curr1->children[numOfc-gindex]=(struct parseTree*)malloc(sizeof(struct parseTree));
 					curr1=curr1->children[numOfc-gindex];
+					curr1->childIndex=numOfc-gindex;
+					strcpy(curr1->lexemeCurrentNode,"-");
 					curr1->parent=tempnode;
-					
+					strcpy(curr1->parentNodeSymbol,tempnode->token);
 					//~ curr1=(struct parseTree*)malloc(sizeof(struct parseTree));
 					strcpy(curr1->token,top->ch);
 					curr1=curr1->parent;
@@ -193,28 +206,56 @@ parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 					//~ printf("is%d",numOfc-gindex);
 				}
 				curr1=curr1->children[numOfc-1];
+				//~ printf("parent of current node is %s",curr1->parentNodeSymbol);
 				printf("pointing to %s\n",curr1->token);
 			}
-		//~ else if(getTermIndex(top->ch)!=-1)
-		//~ {
-			//~ if(strcmp((top->ch),ti.token)==0)
-			//~ {
-				//~ pop();
-				//~ ti=getNextToken(fp1,&B,k);
-			//~ }
-			//~ else
-			//~ {
-				//~ printf("error");
-				//~ break;
-			//~ }
-		//~ }
-		//~ else
-		//~ {
-			//~ printf("Unknown Pattern");
-			//~ break;
-		//~ }
+		}
+	else if(getTermIndex(top->ch)!=-1)
+	{
+		if(strcmp((top->ch),ti.token)==0)
+		{
+			//~ printf("%s",top->ch);
+			printf("popping from stack :%s\n",top->ch);
+			pop();
+			curr1->isLeafNode=1;
+			curr1->lineno=ti.line_numb;
+			strcpy(curr1->lexemeCurrentNode,ti.pattern);
+			//~ printf("%s",top->ch);
+			int temp1=curr1->childIndex;
+			if(temp1==0)
+			{
+				curr1=curr1->parent;
+			}
+			else
+			{
+				curr1=curr1->parent->children[temp1-1];
+			}
+			printf("pointing to %s\n",curr1->token);
+			//~ printf("curr1->sibling is %s",curr1->token);
+			ti=getNextToken(fp1,&B,k);
+		}
+		else
+		{
+			printf("Syntactic error");
+			break;
+		}
 	}
+	else
+	{
+		printf("Unknown Pattern %s\n",top->ch);
+		printf("%d\n",getNonTermIndex(top->ch));
+		break;
+		}
 	}
+	return curr1;
+}
+//~ void printParseTree(parseTree*  PT, char *outfile)
+//~ {
+	//~ int i;
+	//~ while(PT->numchild!=0)
+	//~ {
+		//~ printf("Token: %s",PT->token);
+	//~ }
 }
 int main()
 {
@@ -222,11 +263,12 @@ int main()
 	grammar G;
 	FILE* fp =fopen("Grammar","r");
 	int i,j;
-	char string[200];
+	char string[1000];
 	i=0;
 	while(!feof(fp)) {
-		if (fgets(string,200,fp))
+		if (fgets(string,1000,fp))
 		{
+			printf("%s",string);
 			j=0;
 			char* token = strtok(string, " ");
 			//printf("I am token%s\n",token);
@@ -260,8 +302,19 @@ int main()
 		}
 	}
 	fclose(fp);
+	int s,u;
+	u=0;
+	//~ for(s=0;s<80;s++)
+	//~ {
+		//~ while(strcmp(G.r[s][u],"\0")!=0)
+		//~ {
+			//~ printf("%s\t",G.r[s][u]);
+			//~ u++;
+		//~ }
+		//~ printf("\n");
+	//~ }
 	int numofrules=i;
-	printf("grammar is %s\n",G.r[0][0]);
+	//~ printf("grammar is %s\n",G.r[0][0]);
 	
 	char* ffset[89][100]={{"MAIN","\0"},
 					{"INT","REAL","STRING","MATRIX","SQO","READ","PRINT","ID","FUNID","IF","FUNCTION","\0"},
@@ -376,6 +429,9 @@ int main()
 		//~ }
 		//~ fprintf(fp,"\n");
 	//~ }
-	 parseInputSourceCode("testg",t,G);
+	 parseTree* pt=parseInputSourceCode("testg",t,G);
+	 pt=node;
+	 printParseTree(pt,"output");
+	 
 	return 0;
 }

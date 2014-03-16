@@ -1,5 +1,5 @@
 #include  "lexer.h"
-typedef char* rules[100][200];
+typedef char* rules[100][300];
 //typedef unsigned long long int Set ;
 
 typedef char* Set[89][100];
@@ -22,8 +22,12 @@ struct parseTree
 	struct parseTree* children[20];
 	struct parseTree* parent;
 	char token[100];
+	char lexemeCurrentNode[100];
 	int numchild;
-	char lexeme[100];
+	int childIndex;
+	int lineno;
+	char parentNodeSymbol[100];
+	int isLeafNode;
 };
 typedef struct parseTree parseTree;
 parseTree* node;
