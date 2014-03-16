@@ -784,11 +784,11 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	//End code fragment 1
 	//ti.line_numb=line_num;
 	
-
-
+//~ 
+//~ 
 //~ int main()
 //~ {
-	//~ FILE *fp=fopen("testcase1.txt","r");
+	//~ FILE *fp=fopen("testg","r");
 	//~ buffersize k=10000;
 	//~ buffer B;
 	//~ B=(buffer)malloc(k*sizeof(char));
