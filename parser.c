@@ -119,96 +119,95 @@ void createParseTable(grammar G, Table T, char* ffset[][100],int numofrules)
 	}
 	printf("Assert Rule is 87 %d",T[24][38]);
 }
-parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
-{
-	FILE* fp1 =fopen(testcaseFile,"r");
-	parseTree p;
-	buffersize k=600;
-	buffer B;
-	int r;
-	B=(buffer)malloc(k*sizeof(char));
-	int rulenu;
-	memset(B,0,k);
-	push("$");
-	//printf("%s",top->ch);
-	tokenInfo ti;
-	memset(ti.token,0,100);
-	memset(ti.pattern,0,100);
-	printf("here1");
-	ti=getNextToken(fp1,&B,k);
-	//ti=getNextToken(fp1,&B,k);
-	//~ strcpy(ti.token,"PQR");
-	printf("token is %s",ti.token);
-	if(strcmp(top->ch,"$")==0)
-	{
-		printf("Stuck here");
-		node=(struct parseTree*)malloc(sizeof(struct parseTree));
-		push(G.r[0][0]);
-		node->token=top->ch;
-		node->lexeme=NULL;
-		node->numchild=0;
-		curr=node;
-		printf("%s",top->ch);
-		printf("%d",getNonTermIndex(top->ch));
-	}
-	while((strcmp((top->ch),"$"))!=0)
-	{
-		if(strcmp(top->ch,"EPSILON")==0)
-		{
-			pop();
-		}
-		else if(getNonTermIndex(top->ch)!=-1)
-		{
+//~ parseTree parseInputSourceCode(char *testcaseFile, Table T,grammar G)
+//~ {
+	//~ FILE* fp1 =fopen(testcaseFile,"r");
+	//~ parseTree p;
+	//~ buffersize k=600;
+	//~ buffer B;
+	//~ int r;
+	//~ B=(buffer)malloc(k*sizeof(char));
+	//~ int rulenu;
+	//~ memset(B,0,k);
+	//~ push("$");
+	//~ //printf("%s",top->ch);
+	//~ tokenInfo ti;
+	//~ memset(ti.token,0,100);
+	//~ memset(ti.pattern,0,100);
+	//~ printf("here1");
+	//~ ti=getNextToken(fp1,&B,k);
+	//~ //ti=getNextToken(fp1,&B,k);
+	//strcpy(ti.token,"PQR");
+	//~ printf("token is %s",ti.token);
+	//~ if(strcmp(top->ch,"$")==0)
+	//~ {
+		//~ node=(struct parseTree*)malloc(sizeof(struct parseTree));
+		//~ push(G.r[0][0]);
+		//~ node->token=top->ch;
+		//~ node->lexeme=NULL;
+		//~ node->numchild=0;
+		//~ curr1=node;
+		//~ printf("%s",top->ch);
+		//~ printf("%d",getNonTermIndex(top->ch));
+	//~ }
+	//~ while((strcmp((top->ch),"$"))!=0)
+	//~ {
+		//~ if(strcmp(top->ch,"EPSILON")==0)
+		//~ {
+			//~ pop();
+		//~ }
+		//~ else if(getNonTermIndex(top->ch)!=-1)
+		//~ {
 			//~ printf("Stuck here");
-			rulenu=T[getNonTermIndex(top->ch)][getTermIndex(ti.pattern)];
-			if(rulenu==-1)
-			{
-				printf("error");
-				break;
-			}
-			else
-			{
-				r=1;
-				while(G.r[rulenu][r]!="\0")
-				{
-					r++;
-				}
-				int numOfc=r-1;
-				curr->numchild=numOfc;
-				while(r>0)
-				{
-					r--;
-					push(G.r[rulenu][r]);
-					curr=curr->children[numOfc-r];
-					curr=(struct parseTree*)malloc(sizeof(struct parseTree));
-					curr->token=top->ch;
-					curr->lexeme=NULL;
-					printf("I am on%d",r);
-				}
-			}
-		}
-		
-		else if(getTermIndex(top->ch)!=-1)
-		{
-			if(strcmp((top->ch),ti.token)==0)
-			{
-				pop();
-				ti=getNextToken(fp1,&B,k);
-			}
-			else
-			{
-				printf("error");
-				break;
-			}
-		}
-		else
-		{
-			printf("Unknown Pattern");
-			break;
-		}
-	}
+			//~ rulenu=T[getNonTermIndex(top->ch)][getTermIndex(ti.pattern)];
+			//~ if(rulenu==-1)
+			//~ {
+				//~ printf("error");
+				//~ break;
+			//~ }
+			//~ else
+			//~ {
+				//~ r=1;
+				//~ while(G.r[rulenu][r]!="\0")
+				//~ {
+					//~ r++;
+				//~ }
+				//~ int numOfc=r-1;
+				//~ curr1->numchild=numOfc;
+				//~ while(r>0)
+				//~ {
+					//~ r--;
+					//~ push(G.r[rulenu][r]);
+					//~ curr1=curr1->children[numOfc-r];
+					//~ curr1=(struct parseTree*)malloc(sizeof(struct parseTree));
+					//~ curr1->token=top->ch;
+					//~ curr1->lexeme=NULL;
+					//~ printf("I am on%d",r);
+				//~ }
+			//~ }
+		//~ }
+		//~ 
+		//~ else if(getTermIndex(top->ch)!=-1)
+		//~ {
+			//~ if(strcmp((top->ch),ti.token)==0)
+			//~ {
+				//~ pop();
+				//~ ti=getNextToken(fp1,&B,k);
+			//~ }
+			//~ else
+			//~ {
+				//~ printf("error");
+				//~ break;
+			//~ }
+		//~ }
+		//~ else
+		//~ {
+			//~ printf("Unknown Pattern");
+			//~ break;
+		//~ }
+	//~ }
 	
-}
+//~ }
 int main()
 {
 	//~ printf("here");
@@ -359,18 +358,17 @@ int main()
 	//~ int sizeofnterms=47;
 	//printf("ffset is %s",ffset[87][0]);
 	Table t;
+	FILE* fpw = fopen("abc.txt","w");
 	createParseTable(G,t,ffset,numofrules);
-	parseInputSourceCode("abcd",t,G);
-	//~ push("qwerty");
-	//~ push("qwerty");
-	//~ push("qwerty");
-	//~ push("qwerty");
-	//~ push("qwerty");
-	//~ push("qwerty");
-	//~ printf("%s",top->ch);
-	//~ pop();
-	//~ push("kab");
-	//~ printf("%s",top->ch);
+	for(i=0;i<47;i++)
+	{
+		for(j=0;j<39;j++)
+		{
+			fprintf(fpw,"%d\t",t[i][j]);
+		}
+		fprintf(fp,"\n");
+	}
+	//~ parseInputSourceCode("abcd",t,G);
 
 	
 	return 0;

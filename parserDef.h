@@ -26,4 +26,4 @@ struct parseTree
 };
 typedef struct parseTree parseTree;
 parseTree* node;
-parseTree* curr;
+parseTree* curr1;

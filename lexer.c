@@ -66,8 +66,28 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 			curr++;
 			line_num++;
 		}
-		//~ printf("\nIncurr is %c, %d\n",A[curr],curr);
+		 //~ printf("\nIncurr is %c, %d\n",A[curr],curr);
 		
+	}
+	if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')||(strcmp(searchTok(A[curr]),"abcd")!=0)||A[curr]=='_'||A[curr]=='='||A[curr]=='<'||A[curr]=='"'||A[curr]=='>'||A[curr]=='$'))
+	{
+		cli=0;
+		memset(currLex,0,100);
+		currLex[cli]=A[curr];
+		printf("current is %d %c and next is %d %c and next is %d %c",curr,A[curr],curr+1,A[curr+1],curr+2,A[curr+2]);
+		cli++;
+		curr++;
+		printf("Error: Unknown Token:%s at line number %d\n",currLex,line_num);
+		if(A[curr]=='$')
+		{
+			exit(0);
+		}
+		if(!(A[curr]=='$'||A[curr]=='\n'))
+		{
+			printf("char is %c\n",A[curr]);
+			ti=getNextToken(fp,B,k);
+			return ti;
+		}
 	}
 	if(strcmp("abcd",searchTok(A[curr]))!=0)//search for single character tokens
 	{
@@ -238,27 +258,28 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 		}			
 	}
 	
-	//~ if(A[curr]=='"')
-	//~ {
-		//~ cli=0;
-		//~ memset(currLex,0,100);
-		//~ currLex[cli]=A[curr];
-		//~ curr++;
-		//~ cli++;
-		//~ while(A[curr]>='a'&& A[curr]<='z' && A[curr]!='"')
-		//~ {
-			//~ currLex[cli]=A[curr];
-			//~ curr++;
-			//~ cli++;
-		//~ }
-		//~ currLex[cli]=A[curr];
-		//~ strcpy(ti.token,"STR");
-		//~ 
-		//~ strcpy(ti.pattern,currLex);
-		//~ ti.line_numb=line_num;
-		//~ return ti;
-		//~ curr++;		
-	//~ }
+	if(A[curr]=='"')
+	{
+		cli=0;
+		memset(currLex,0,100);
+		currLex[cli]=A[curr];
+		curr++;
+		cli++;
+		while(A[curr]>='a'&& A[curr]<='z' && A[curr]!='"')
+		{
+			currLex[cli]=A[curr];
+			curr++;
+			cli++;
+		}
+		currLex[cli]=A[curr];
+		curr++;
+		cli++;
+		strcpy(ti.token,"STR");
+		strcpy(ti.pattern,currLex);
+		ti.line_numb=line_num;
+		return ti;
+		curr++;		
+	}
 	if(A[curr]>='0' && A[curr]<='9')
 	{
 		cli=0;
@@ -339,7 +360,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 		}
 		if(A[curr]=='m'){
 			currLex[cli]=A[curr];
-			printf("After %c\n %d",currLex[cli],cli);
+			//printf("After %c\n %d",currLex[cli],cli);
 			cli++;
 			curr++;//can be main or function
 			if(A[curr]=='a'){
@@ -351,16 +372,17 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 					cli++;
 					curr++;
 					if(A[curr]=='n'){
-						printf("After %c\n",A[curr]);
+						//~ printf("After %c\n",A[curr]);
 						currLex[cli]=A[curr];
 						cli++;
 						curr++;
 						if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')))
 						{
 							//~ printf("here");
-							printf("pattern is %s",currLex);
+							//printf("pattern is %s",currLex);
 							strcpy(ti.pattern,currLex);
 							strcpy(ti.token,"MAIN");
+							ti.line_numb=line_num;
 							return ti;
 						}
 					}
@@ -373,9 +395,10 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 			cli++;
 			curr++;
 		}
-		printf("pattern is %s",currLex);
+		//~ printf("pattern is %s",currLex);
 		strcpy(ti.pattern,currLex);
 		strcpy(ti.token,"FUNID");
+		ti.line_numb=line_num;
 		return ti;
 	}
 	
@@ -384,6 +407,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	 * */
 	cli=0;
 	memset(currLex,0,100);
+	int flag=0;
 	if(A[curr]=='e')
 	{
 		currLex[cli]=A[curr];
@@ -415,6 +439,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 							//~ printf("pattern is %s",currLex);
 							strcpy(ti.pattern,currLex);
 							strcpy(ti.token,"ENDIF");
+							ti.line_numb=line_num;
+							flag=1;
 							return ti;
 						}
 					}
@@ -425,6 +451,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 					//~ printf("pattern is %s",currLex);
 					strcpy(ti.pattern,currLex);
 					strcpy(ti.token,"END");
+					ti.line_numb=line_num;
+					flag=1;
 					return ti;
 				}
 			}
@@ -450,6 +478,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 						//~ printf("pattern is %s",currLex);
 						strcpy(ti.pattern,currLex);
 						strcpy(ti.token,"ELSE");
+						ti.line_numb=line_num;
+						flag=1;
 						return ti;
 					}
 				}
@@ -478,6 +508,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 					//~ printf("pattern is %s",currLex);
 					strcpy(ti.pattern,currLex);
 					strcpy(ti.token,"INT");
+					ti.line_numb=line_num;
+					flag=1;
 					return ti;
 				}
 			}
@@ -493,6 +525,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 					//~ printf("pattern is %s",currLex);
 					strcpy(ti.pattern,currLex);
 					strcpy(ti.token,"IF");
+					ti.line_numb=line_num;
+					flag=1;
 					return ti;
 				}
 			}
@@ -523,6 +557,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 						//~ printf("pattern is %s",currLex);
 						strcpy(ti.pattern,currLex);
 						strcpy(ti.token,"REAL");
+						ti.line_numb=line_num;
+						flag=1;
 						return ti;
 					}
 				}
@@ -537,6 +573,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 						//~ printf("pattern is %s",currLex);
 						strcpy(ti.pattern,currLex);
 						strcpy(ti.token,"READ");
+						ti.line_numb=line_num;
+						flag=1;
 						return ti;
 					}
 				}
@@ -574,6 +612,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 							//~ printf("pattern is %s",currLex);
 							strcpy(ti.pattern,currLex);
 							strcpy(ti.token,"PRINT");
+							ti.line_numb=line_num;
+							flag=1;
 							return ti;
 						}
 					}
@@ -583,6 +623,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	}
 	else if(A[curr]=='s')
 	{
+		//~ printf("go gere");
 		currLex[cli]=A[curr];
 		curr++;
 		cli++;
@@ -617,6 +658,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 								//~ printf("pattern is %s",currLex);
 								strcpy(ti.pattern,currLex);
 								strcpy(ti.token,"STRING");
+								ti.line_numb=line_num;
+								flag=1;
 								return ti;
 							}
 						}
@@ -661,6 +704,8 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 								//~ printf("pattern is %s",currLex);
 								strcpy(ti.pattern,currLex);
 								strcpy(ti.token,"MATRIX");
+								ti.line_numb=line_num;
+								flag=1;
 								return ti;
 							}
 						}
@@ -678,7 +723,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 			cli++;
 			curr++;
 		}
-		printf("%s",currLex);
+		//~ printf("%s",currLex);
 		if(A[curr]>='0'&&A[curr]<='9')
 		{
 			int i=0;
@@ -721,29 +766,19 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 		{
 			strcpy(ti.pattern,currLex);
 			strcpy(ti.token,"ID");
+			ti.line_numb=line_num;
 			return ti;
 		}
 	}
-	if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')||(strcmp(searchTok(A[curr]),"abcd")!=0)||A[curr]=='_'||A[curr]=='='||A[curr]=='<'||A[curr]=='>'||A[curr]=='$'))
+	else if(flag==0)
 	{
-		cli=0;
-		memset(currLex,0,100);
-		currLex[cli]=A[curr];
-		cli++;
-		curr++;
-		printf("Error: Unknown Token:%s at line number %d\n",currLex,line_num);
-		if(A[curr]=='$')
-		{
-			exit(0);
-		}
-		//~ if(!(A[curr]=='$'||A[curr]=='\n'))
-		//~ {
-			//~ printf("char is %c\n",A[curr]);
-			ti=getNextToken(fp,B,k);
-			return ti;
-		}
-	//~ }
-	strcpy(ti.token,"Here");
+		strcpy(ti.pattern,currLex);
+		strcpy(ti.token,"ID");
+		ti.line_numb=line_num;
+		return ti;
+	}
+	
+	//~ strcpy(ti.token,"Here");
 	return ti;
 }
 	//End code fragment 1
@@ -751,59 +786,21 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	
 
 
-int main()
-{
-	FILE *fp=fopen("abcd","r");
-	buffersize k=600;
-	buffer B;
-	B=(buffer)malloc(k*sizeof(char));
-//	printf("here");
-	memset(B,0,k);
-	getStream(fp,&B,k);
-	while(B[curr]!='$')
-	{
-		//printf("I am here\n");
-		printf("Here");
-		tokenInfo ti;
-		memset(ti.token,0,100);
-		memset(ti.pattern,0,100);
-		ti=getNextToken(fp,&B,k);
-		printf("\nFIRST is %s\n%s\n%d\n",ti.pattern,ti.token,ti.line_numb);
-		printf("curr is %c\n",B[curr]);
-	}
-	//tokenInfo ti2;
-	//ti2=getNextToken(fp,&B,k);
-	//printf("%s is buffer",B);
-	//printf("%d is buffer",strlen(B));
-	//printf(" Second Token is = %s\n",ti2.token);
-	//printf("%s is buffer",B);
-	//int i = 0;
-	
-	
-	//buffersize k=600;
-	//buffer B;
-	
-	////printf("%s",B);
-	
-	//while(B[i]!='$')
-	//{
-		//printf("%d %c\n",i,B[i]);
-		//i++;
-	//}
-	//printf("%s",B);
-	//memset(B,0,k);
-	//printf("\nNext\n");
-	//getStream(fp,B,k);
-	
-	//i=0;
-	//while(B[i]!='$')
-	//{
-		//printf("%d %c\n",i,B[i]);
-		//i++;
-	//}
-	//printf("%s",B);
-	//fclose(fp);
-	//printf("\nend");
-	
-	return 0;
-}
+//~ int main()
+//~ {
+	//~ FILE *fp=fopen("testcase1.txt","r");
+	//~ buffersize k=10000;
+	//~ buffer B;
+	//~ B=(buffer)malloc(k*sizeof(char));
+	//~ memset(B,0,k);
+	//~ getStream(fp,&B,k);
+	//~ while(B[curr]!='$')
+	//~ {
+		//~ tokenInfo ti;
+		//~ memset(ti.token,0,100);
+		//~ memset(ti.pattern,0,100);
+		//~ ti=getNextToken(fp,&B,k);
+		//~ printf("Pattern is %s\nToken is %s\nLine number is %d\n\n",ti.pattern,ti.token,ti.line_numb);
+	//~ }
+	//~ return 0;
+//~ }
