@@ -249,13 +249,30 @@ parseTree* parseInputSourceCode(char *testcaseFile, Table T,grammar G)
 	}
 	return curr1;
 }
-//~ void printParseTree(parseTree*  PT, char *outfile)
-//~ {
-	//~ int i;
-	//~ while(PT->numchild!=0)
-	//~ {
-		//~ printf("Token: %s",PT->token);
-	//~ }
+void printParseTree(parseTree*  PT, char *outfile)
+{
+	FILE* f =fopen("output","w");
+	int i;
+	if(PT->numchild==0)
+	{
+		printf("lexemeCurrentNode: %s\nlineno %d\ntoken %s\nparentNodeSymbol: %s\nisLeafNode(0=No,1=Yes): %d\n",PT->lexemeCurrentNode,PT->lineno,PT->token,PT->parentNodeSymbol,PT->isLeafNode);//tree not complete, so non terminals are labeled as leaf nodes
+		printf("\n");
+		fprintf(f,"lexemeCurrentNode: %s\nlineno %d\ntoken %s\nparentNodeSymbol: %s\nisLeafNode(0=No,1=Yes): %d\n",PT->lexemeCurrentNode,PT->lineno,PT->token,PT->parentNodeSymbol,PT->isLeafNode);//tree not complete, so non terminals are labeled as leaf nodes
+		fprintf(f,"\n");
+		return;
+	}
+	else
+	{
+		for(i=0;i<PT->numchild;i++)
+		{
+			printf("lexemeCurrentNode: %s\nlineno %d\nNodeSymbol %s\nparentNodeSymbol: %s\nisLeafNode(0=No,1=Yes): %d\n",PT->lexemeCurrentNode,PT->lineno,PT->token,PT->parentNodeSymbol,PT->isLeafNode);
+			printf("\n");
+			fprintf(f,"lexemeCurrentNode: %s\nlineno %d\nNodeSymbol %s\nparentNodeSymbol: %s\nisLeafNode(0=No,1=Yes): %d\n",PT->lexemeCurrentNode,PT->lineno,PT->token,PT->parentNodeSymbol,PT->isLeafNode);
+			fprintf(f,"\n");
+			printParseTree(PT->children[i],"output");
+		}
+	}
+	//~ fclose(f);
 }
 int main()
 {
