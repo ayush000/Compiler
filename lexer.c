@@ -34,7 +34,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 {
 	char* A=*B;
 	char currLex[100];
-	int cli;
+	int cli,nxt;
 	//fp=fopen("abcd","r");
 	
 	
@@ -47,6 +47,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	
 	while(A[curr]==' '||A[curr]=='\t'||A[curr]=='\n'||A[curr]=='#')
 	{
+		//~ int nxt=curr+1;
 		//printf("I am removing whitesp\n");
 		if(A[curr]==' '|| A[curr]=='\t')
 		{
@@ -68,6 +69,11 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 		}
 		 //~ printf("\nIncurr is %c, %d\n",A[curr],curr);
 		
+	}
+	if(A[curr]=='$')
+	{
+		strcpy(ti.token,"EOF");
+		return ti;
 	}
 	if(!((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9')||(strcmp(searchTok(A[curr]),"abcd")!=0)||A[curr]=='_'||A[curr]=='='||A[curr]=='<'||A[curr]=='"'||A[curr]=='>'||A[curr]=='$'))
 	{
@@ -265,11 +271,18 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 		currLex[cli]=A[curr];
 		curr++;
 		cli++;
-		while(A[curr]>='a'&& A[curr]<='z' && A[curr]!='"')
+		while(A[curr]!='"')
 		{
-			currLex[cli]=A[curr];
-			curr++;
-			cli++;
+			if((A[curr]>='a'&& A[curr]<='z')||A[curr]==' ')
+			{
+				currLex[cli]=A[curr];
+				curr++;
+				cli++;
+			}
+			else
+			{
+				printf("Error. Invalid string");
+			}
 		}
 		currLex[cli]=A[curr];
 		curr++;
@@ -716,7 +729,7 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	}
 	if((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z')||(A[curr]>='0'&&A[curr]<='9'))
 	{
-		//~ printf("ID sensed\n");
+		printf("ID sensed\n");
 		while((A[curr]>='a'&&A[curr]<='z')||(A[curr]>='A'&&A[curr]<='Z'))
 		{
 			currLex[cli]=A[curr];
@@ -786,21 +799,29 @@ tokenInfo getNextToken(FILE *fp,buffer *B,buffersize k)
 	
 
 
-//~ int main()
-//~ {
-	//~ FILE *fp=fopen("testg","r");
-	//~ buffersize k=10000;
-	//~ buffer B;
-	//~ B=(buffer)malloc(k*sizeof(char));
-	//~ memset(B,0,k);
-	//~ getStream(fp,&B,k);
+int main()
+{
+	FILE *fp=fopen("testcase1.txt","r");
+	buffersize k=10000;
+	buffer B;
+	B=(buffer)malloc(k*sizeof(char));
+	memset(B,0,k);
+	getStream(fp,&B,k);
 	//~ while(B[curr]!='$')
-	//~ {
-		//~ tokenInfo ti;
-		//~ memset(ti.token,0,100);
-		//~ memset(ti.pattern,0,100);
-		//~ ti=getNextToken(fp,&B,k);
-		//~ printf("Pattern is %s\nToken is %s\nLine number is %d\n\n",ti.pattern,ti.token,ti.line_numb);
-	//~ }
-	//~ return 0;
-//~ }
+	tokenInfo ti;
+	memset(ti.token,0,100);
+	memset(ti.pattern,0,100);
+	while(1)
+	{
+		//~ printf("%d\n",strcmp(ti.token,"EOF"));
+		ti=getNextToken(fp,&B,k);
+		if(strcmp(ti.token,"EOF")==0)
+		{
+			//~ printf("HPattern is %s\nToken is p%sq\nLine number is %d\n\n",ti.pattern,ti.token,ti.line_numb);
+			break;
+		}
+		printf("Pattern is %s\nToken is p%sq\nLine number is %d\n\n",ti.pattern,ti.token,ti.line_numb);
+	}
+	//~ printf("%s, %d\n",ti.token,strcmp(ti.token,"EOF"));
+	return 0;
+}
