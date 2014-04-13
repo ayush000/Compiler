@@ -817,10 +817,10 @@ int main()
 		ti=getNextToken(fp,&B,k);
 		if(strcmp(ti.token,"EOF")==0)
 		{
-			//~ printf("HPattern is %s\nToken is p%sq\nLine number is %d\n\n",ti.pattern,ti.token,ti.line_numb);
+			//~ printf("HPattern is %s\nToken is %s\nLine number is %d\n\n",ti.pattern,ti.token,ti.line_numb);
 			break;
 		}
-		printf("Pattern is %s\nToken is p%sq\nLine number is %d\n\n",ti.pattern,ti.token,ti.line_numb);
+		printf("Pattern is %s\nToken is %s\nLine number is %d\n\n",ti.pattern,ti.token,ti.line_numb);
 	}
 	//~ printf("%s, %d\n",ti.token,strcmp(ti.token,"EOF"));
 	return 0;
